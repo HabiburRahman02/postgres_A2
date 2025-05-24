@@ -50,9 +50,7 @@ INSERT INTO sightings (sighting_id, species_id, ranger_id, location, sighting_ti
 -- drop table sightings;
 
 
-SELECT * FROM rangers;
-SELECT * FROM species;
-SELECT * FROM sightings;
+
 
 -- no - 01
 INSERT INTO rangers(ranger_id, name, region)
@@ -66,3 +64,29 @@ SELECT  count(DISTINCT  species_id ) as unique_species_count FROM sightings;
 -- no-03
 SELECT * FROM sightings WHERE location like '%Pass%';
 
+
+-- no-04
+SELECT r.name, count(s.sighting_id) as total_sightings  FROM rangers r
+LEFT JOIN sightings s ON r.ranger_id = s.ranger_id
+GROUP BY r.name
+ORDER BY r.name
+
+
+-- no-05
+SELECT common_name FROM species
+LEFT JOIN sightings s ON species.species_id = s.species_id 
+WHERE s.species_id IS NULL;
+
+
+-- no-06
+SELECT sp.common_name, sighting_time, name FROM sightings si
+LEFT JOIN species sp ON si.species_id = sp.species_id
+LEFT JOIN rangers ra ON si.ranger_id = ra.ranger_id
+ORDER BY sighting_time DESC
+LIMIT 2;
+
+
+
+SELECT * FROM rangers;
+SELECT * FROM species;
+SELECT * FROM sightings;
