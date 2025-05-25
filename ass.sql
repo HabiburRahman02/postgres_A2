@@ -86,7 +86,31 @@ ORDER BY sighting_time DESC
 LIMIT 2;
 
 
+-- no-07
+UPDATE species
+SET conservation_status = 'Historic'
+WHERE EXTRACT(year from  discovery_date)  < 1800
 
-SELECT * FROM rangers;
-SELECT * FROM species;
-SELECT * FROM sightings;
+
+-- no-08
+SELECT 
+  sighting_id,
+  CASE
+ 	 WHEN EXTRACT(HOUR FROM sighting_time)  < 12  THEN 'Morning'
+	 WHEN EXTRACT(HOUR FROM sighting_time) >= 12 AND EXTRACT(HOUR FROM sighting_time) <= 17 THEN 'Afternoon'
+     ELSE 'Evening'
+     END AS time_of_day
+FROM sightings;
+
+
+-- no-09
+DELETE FROM rangers
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM sightings
+  WHERE sightings.ranger_id = rangers.ranger_id
+);
+
+
+
+
